@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  BadgeDollarSignIcon,
+
   ShoppingCart,
-  User,
+  
   Search,
   AlignRight,
   Home,
@@ -109,16 +109,16 @@ export default function Header() {
             Close
           </button>
           <Link href="/account" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-            <User size={24} className="inline-block mr-2" /> Account
+            <strong> Account</strong>
           </Link>
           <Link href="/checkout" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-            <BadgeDollarSignIcon size={24} className="inline-block mr-2" /> Checkout
+          <strong>Checkout</strong>
           </Link>
           <Link href="/contact" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-            Contact
+          <strong> Contact </strong>
           </Link>
           <Link href="/about" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-            About
+          <strong> About </strong>
           </Link>
         </div>
       )}
