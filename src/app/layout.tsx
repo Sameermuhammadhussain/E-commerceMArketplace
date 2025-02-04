@@ -4,6 +4,8 @@ import "./globals.css";
 import Footer from "./components/footer";
 // import Header from "./components/header";
 import AdComponent from "./components/adcomponet";
+import { CartProvider } from "./context/CartContext";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +34,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         
         <AdComponent discountProduct={discountProduct} />
+        <CartProvider >
+          
         {children}
+        </CartProvider>
         <Footer />
       </body>
     </html>

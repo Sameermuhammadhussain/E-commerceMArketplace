@@ -31,7 +31,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   const handleBlur = () => {
-    // Delay hiding to allow onMouseDown to register on suggestion click
+    
     setTimeout(() => {
       setShowSuggestions(false);
     }, 100);
