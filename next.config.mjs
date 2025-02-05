@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,  // Enables React's strict mode
-  swcMinify: true,        // Uses the SWC compiler for faster builds
+  reactStrictMode: true,  
   images: {
     domains: [
       'images.unsplash.com', // Add images.unsplash.com

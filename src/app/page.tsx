@@ -1,4 +1,3 @@
-// app/page.tsx
 import Header from "@/app/components/header";
 import Hero from "./components/hero";
 import Side from "./components/side";
@@ -7,9 +6,12 @@ import Arrival from "./components/arrival";
 import Blog from "./components/blog";
 import Follow from "./components/follow";
 
-export default function Home() {
+
+import React from 'react'
+
+const Home = () => {
   return (
-    <>
+    <div>
       <Header />
       <Hero />
       <Side />
@@ -17,6 +19,8 @@ export default function Home() {
       <Arrival />
       <Blog />
       <Follow />
-    </>
-  );
+    </div>
+  )
 }
+
+export default Home

@@ -1,16 +1,36 @@
-import { fetchProducts } from "@/app/lib/api";
+"use client";
 
-const ProductDetail = async ({ params }: { params: { id: string } }) => {
-  const product = await fetchProducts(params.id);
+import { useEffect, useState } from "react";
+import { fetchProducts, Product } from "@/app/lib/api";
 
-  if (!product) return <p>Product not found.</p>;
+interface ProductDetailProps {
+  params: { id: string };
+}
+
+const ProductDetail: React.FC<ProductDetailProps> = ({ params }) => {
+  const { id } = params;
+  const [product, setProduct] = useState<Product | null>(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      // For demonstration, fetch all products and filter by id.
+      // In production, consider creating an endpoint to fetch a single product by id.
+      const products = await fetchProducts();
+      const foundProduct = products.find((p: Product) => p._id === id) || null; // Ensure 'p' is typed as Product and check '_id' for matching
+      setProduct(foundProduct);
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (!product) {
+    return <p>Loading product details...</p>;
+  }
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
-      <img src={product.image} alt={product.name} className="w-full h-60 object-cover rounded-lg" />
-      <h1 className="text-3xl font-bold mt-4">{product.name}</h1>
-      <p className="text-gray-500 mt-2">{product.price}</p>
-      <p className="mt-4">{product.description}</p>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold">{product.category}</h1>
+      <p>{product.description}</p>
+      {/* Add more product details as needed */}
     </div>
   );
 };

@@ -1,25 +1,12 @@
 import React from "react";
-import Image from "next/image";
+
 import Link from "next/link";
 
 function Side() {
   return (
     <div className="w-full bg-[#FAF4F4] py-12 px-6 md:px-20">
       <div className="flex flex-col md:flex-row justify-center items-center relative">
-        {/* <Image
-          src="/sidetable.png"
-          alt="Side Table"
-          width={300}
-          height={300}
-          className="absolute left-0 md:left-[10%] w-[60%] md:w-[40%]"
-        />
-        <Image
-          src="/sidesofa.png"
-          alt="Side Sofa"
-          width={300}
-          height={300}
-          className="absolute right-0 md:right-[10%] w-[60%] md:w-[40%]"
-        /> */}
+       
       </div>
 
       <div className="mt-[250px] flex flex-col md:flex-row justify-between items-center md:px-[150px]">

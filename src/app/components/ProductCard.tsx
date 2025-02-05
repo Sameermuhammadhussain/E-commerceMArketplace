@@ -1,8 +1,7 @@
-// components/ProductCard.tsx
 "use client";
 
 import Image from "next/image";
-import { Product } from "@/app/lib/api"; // import the Product type if needed
+import { Product } from "@/app/lib/api"; 
 
 type ProductCardProps = {
   product: Product;

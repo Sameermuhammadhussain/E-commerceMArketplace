@@ -1,16 +1,14 @@
 "use client";
 
 import {
-
   ShoppingCart,
-  
   Search,
   AlignRight,
   Home,
   Store,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Header() {
@@ -20,7 +18,8 @@ export default function Header() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
 
-  const suggestionsData = ["sofa", "chair", "table", "bed"];
+  // Memoize the suggestions data so it remains stable between renders.
+  const suggestionsData = useMemo(() => ["sofa", "chair", "table", "bed"], []);
 
   useEffect(() => {
     if (search.trim() !== "") {
@@ -31,7 +30,7 @@ export default function Header() {
     } else {
       setFilteredSuggestions(suggestionsData);
     }
-  }, [search]);
+  }, [search, suggestionsData]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,9 +58,12 @@ export default function Header() {
           <ShoppingCart size={28} />
         </Link>
       </div>
-      
+
       <div className="relative hidden md:block w-64">
-        <form onSubmit={handleSearchSubmit} className="flex items-center border rounded-lg px-3 py-2 shadow-md w-full">
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex items-center border rounded-lg px-3 py-2 shadow-md w-full"
+        >
           <input
             type="text"
             placeholder="Search..."
@@ -109,16 +111,16 @@ export default function Header() {
             Close
           </button>
           <Link href="/account" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-            <strong> Account</strong>
+            <strong>Account</strong>
           </Link>
           <Link href="/checkout" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-          <strong>Checkout</strong>
+            <strong>Checkout</strong>
           </Link>
           <Link href="/contact" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-          <strong> Contact </strong>
+            <strong>Contact</strong>
           </Link>
           <Link href="/about" className="block py-2 text-gray-800 hover:text-gray-600 transition">
-          <strong> About </strong>
+            <strong>About</strong>
           </Link>
         </div>
       )}

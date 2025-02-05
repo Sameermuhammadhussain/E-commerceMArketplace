@@ -1,42 +1,59 @@
-'use client'
+"use client";
 
-import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group"
-import { Label } from "@/app/components/ui/label"
-import { Input } from "@/app/components/ui/input"
-import { Button } from "@/app/components/ui/button"
+import { RadioGroup, RadioGroupItem } from "@/app/components/ui/radio-group";
+import { Label } from "@/app/components/ui/label";
+import { Input } from "@/app/components/ui/input";
+import { Button } from "@/app/components/ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/app/components/ui/select"
-import Link from "next/link"
+} from "@/app/components/ui/select";
+import Link from "next/link";
+import { useCart } from "@/app/context/CartContext";
+import Image from "next/image";
 
 export default function CheckoutForm() {
+  const { cart } = useCart();
+
+  // Calculate subtotal (for each product) and grand total
+  const grandTotal = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+
   return (
     <div className="w-full min-h-screen bg-white px-4 py-8 md:px-6">
       <div className="max-w-7xl mx-auto grid gap-8 lg:grid-cols-2">
         {/* Billing Details Section */}
         <div className="space-y-8">
-          <h1 className="text-3xl font-semibold">Billing details</h1>
+          <h1 className="text-3xl font-semibold">Billing Details</h1>
           <div className="grid gap-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First Name</Label>
-                <Input id="firstName" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+                <Input
+                  id="firstName"
+                  className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="lastName">Last Name</Label>
-                <Input id="lastName" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+                <Input
+                  id="lastName"
+                  className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+                />
               </div>
             </div>
-            
             <div className="space-y-2">
               <Label htmlFor="companyName">Company Name (Optional)</Label>
-              <Input id="companyName" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+              <Input
+                id="companyName"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+              />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="country">Country / Region</Label>
               <Select defaultValue="sri-lanka">
@@ -50,17 +67,20 @@ export default function CheckoutForm() {
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="street">Street address</Label>
-              <Input id="street" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+              <Label htmlFor="street">Street Address</Label>
+              <Input
+                id="street"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+              />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="city">Town / City</Label>
-              <Input id="city" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+              <Input
+                id="city"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+              />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="province">Province</Label>
               <Select defaultValue="western">
@@ -74,27 +94,34 @@ export default function CheckoutForm() {
                 </SelectContent>
               </Select>
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="zip">ZIP code</Label>
-              <Input id="zip" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+              <Label htmlFor="zip">ZIP Code</Label>
+              <Input
+                id="zip"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+              />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="phone">Phone</Label>
-              <Input id="phone" type="tel" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+              <Input
+                id="phone"
+                type="tel"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+              />
             </div>
-
             <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
-              <Input id="email" type="email" className="h-[75px] rounded-[10px] border-[#9F9F9F]" />
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F]"
+              />
             </div>
-
             <div className="space-y-2">
-              <Input 
-                id="additional" 
-                placeholder="Additional information"
-                className="h-[75px] rounded-[10px] border-[#9F9F9F] text-[#9F9F9F]" 
+              <Input
+                id="additional"
+                placeholder="Additional Information"
+                className="h-[75px] rounded-[10px] border-[#9F9F9F] text-[#9F9F9F]"
               />
             </div>
           </div>
@@ -102,67 +129,86 @@ export default function CheckoutForm() {
 
         {/* Order Summary Section */}
         <div className="lg:pl-8">
-          <div className="bg-white p-6 space-y-6">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-medium">Product</h2>
-              <h2 className="text-2xl font-medium">Subtotal</h2>
+          <div className="bg-gray-50 p-6 rounded-lg shadow">
+            <h2 className="text-2xl font-semibold mb-4">Your Order</h2>
+
+            {/* Header for Order Summary */}
+            <div className="flex justify-between items-center border-b pb-2 mb-4">
+              <span className="font-medium">Product</span>
+              <span className="font-medium">Subtotal</span>
             </div>
 
+            {/* List of Cart Items */}
             <div className="space-y-4">
-              <div className="flex justify-between items-center text-base">
-                <div className="text-[#9F9F9F]">
-                  Asgaard sofa <span className="text-black mx-1">×</span> 1
+              {cart.map((item) => (
+                <div
+                  key={`item-${item.id}-${item.quantity}`}
+                  className="flex justify-between items-center"
+                >
+                  <div className="flex items-center gap-4">
+                    <Image
+                      src={item.imagePath}
+                      alt={item.category}
+                      width={80}
+                      height={80}
+                      className="rounded"
+                    />
+                    <div>
+                      <p className="font-medium">{item.category}</p>
+                      <p className="text-sm text-gray-500">
+                        {item.quantity} × ${item.price.toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="font-medium">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </div>
                 </div>
-                <div>Rs. 250,000.00</div>
-              </div>
+              ))}
+            </div>
 
-              <div className="flex justify-between items-center text-base">
-                <div>Subtotal</div>
-                <div>Rs. 250,000.00</div>
-              </div>
-
+            {/* Order Totals */}
+            <div className="mt-6 border-t pt-4">
               <div className="flex justify-between items-center">
-                <div>Total</div>
-                <div className="text-2xl font-bold text-[#B88E2F]">Rs. 250,000.00</div>
+                <span className="font-medium">Subtotal</span>
+                <span className="font-medium">${grandTotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between items-center mt-2">
+                <span className="font-medium">Total</span>
+                <span className="font-bold text-xl text-[#B88E2F]">
+                  ${grandTotal.toFixed(2)}
+                </span>
               </div>
             </div>
 
-            <div className="border-t border-[#D9D9D9] pt-6">
+            {/* Payment Options */}
+            <div className="mt-6 border-t pt-4">
               <RadioGroup defaultValue="bank-transfer" className="space-y-4">
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="bank-transfer" id="bank-transfer" />
                   <Label htmlFor="bank-transfer">Direct Bank Transfer</Label>
                 </div>
-                <p className="text-[#9F9F9F] text-justify pl-6">
-                  Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                <p className="text-sm text-gray-500 pl-6">
+                  Make your payment directly into our bank account. Please use your Order ID as the payment reference.
                 </p>
-                
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="bank-transfer-2" id="bank-transfer-2" />
-                  <Label htmlFor="bank-transfer-2" className="text-[#9F9F9F]">Direct Bank Transfer</Label>
-                </div>
-                
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="cod" id="cod" />
-                  <Label htmlFor="cod" className="text-[#9F9F9F]">Cash On Delivery</Label>
+                  <Label htmlFor="cod">Cash On Delivery</Label>
                 </div>
               </RadioGroup>
             </div>
 
-            <div className="space-y-6">
-              <p className="text-justify text-sm">
-                Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our{" "}
-                <a href="#" className="underline">privacy policy</a>.
-              </p>
-            <Link href="/SignIn">
-              <Button className="w-full md:w-auto md:min-w-[318px] h-16 rounded-[15px] text-xl mx-auto block border border-black bg-white text-black hover:bg-black hover:text-white transition-colors">
-                Place order
-              </Button>
+            {/* Place Order Button */}
+            <div className="mt-6">
+              <Link href="./congragulations">
+                <Button className="w-full h-16 rounded-[15px] text-xl border border-black bg-black text-white hover:bg-white hover:text-black transition-colors">
+                  Place Order
+                </Button>
               </Link>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

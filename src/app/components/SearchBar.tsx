@@ -14,7 +14,7 @@ const SearchBar = ({ onSearch }: SearchBarProps) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  // Update filtered suggestions whenever inputValue changes
+  //  Update filtered suggestions whenever inputValue changes
   useEffect(() => {
     if (inputValue.trim() !== "") {
       const filtered = suggestionsData.filter((suggestion) =>

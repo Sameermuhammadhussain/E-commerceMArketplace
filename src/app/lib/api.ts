@@ -1,43 +1,47 @@
-// lib/api.ts
+// src/app/lib/api.ts
 
+// Define the Product type and export it
 export type Product = {
-  id: string;
   category: string;
+  _id: string;
   price: number;
   description: string;
   stockLevel: number;
   image: string;
   imagePath: string;
-  discountPercentage?: number;
-  isFeaturedProduct?: boolean;
+  discountPercentage: number;
+  isFeaturedProduct: boolean;
 };
 
-export const fetchProducts = async (query: string = ""): Promise<Product[]> => {
+// Fetch products from the API with optional search query
+export const fetchProducts = async (query: string = "") => {
   try {
     const queryStr = query
-      ? `*[_type == 'product' && name match "${query}*"]{category, _id, price, description, stockLevel, image, imagePath, discountPercentage, isFeaturedProduct}`
-      : `*[_type == 'product']{category, _id, price, description, stockLevel, image, imagePath, discountPercentage, isFeaturedProduct}`;
+      ? `*[_type == "product" && name match "${query}*"]{category, _id, price, description, stockLevel, image, imagePath, discountPercentage, isFeaturedProduct}`
+      : `*[_type == "product"]{category, _id, price, description, stockLevel, image, imagePath, discountPercentage, isFeaturedProduct}`;
 
-    const encodedQuery = encodeURIComponent(queryStr);
-    const url = `https://6qpjo4oq.api.sanity.io/v2025-01-18/data/query/production?query=${encodedQuery}`;
+    const url = `https://6qpjo4oq.api.sanity.io/v2025-01-18/data/query/production?query=${encodeURIComponent(queryStr)}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
     if (!response.ok) {
-      throw new Error("Failed to fetch products");
+      throw new Error(`HTTP error! Status: ${response.status} - ${response.statusText}`);
     }
 
-    const { result } = await response.json();
-    console.log("Fetched products:", result);
+    const data = await response.json();
 
-    // Map _id to id for each product.
-    return Array.isArray(result)
-      ? result.map((item: any) => ({
-          ...item,
-          id: item._id,
-        }))
-      : [];
+    if (!data || !data.result) {
+      throw new Error("Invalid API response structure.");
+    }
+
+    return data.result;
   } catch (error) {
     console.error("Error fetching products:", error);
-    return [];
+    return []; // Return an empty array to prevent crashes
   }
 };

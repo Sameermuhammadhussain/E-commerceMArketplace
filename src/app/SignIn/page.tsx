@@ -1,4 +1,4 @@
-'use client'; // Make this a client-side component
+'use client'; 
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -14,7 +14,7 @@ const SignIn = () => {
     // Check if user is already signed in (i.e., if token exists in localStorage)
     const token = localStorage.getItem('user_token');
     if (token) {
-      // If token exists, redirect to dashboard or a protected page
+      
       router.push('/dashboard');
     }
   }, [router]);

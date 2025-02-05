@@ -1,11 +1,10 @@
 "use client";
-import Header from "@/app/components/header";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import Header from "@/app/components/header";
 import { fetchProducts } from "@/app/lib/api";
-import { useCart } from "@/app/context/CartContext"; // Import Cart Context
+import { useCart } from "@/app/context/CartContext";
 
-// Define Product Type
 type Product = {
   id: string;
   category: string;
@@ -15,70 +14,77 @@ type Product = {
   imagePath: string;
   discountPercentage?: number;
   isFeaturedProduct?: boolean;
-  quantity?: number; // Ensure quantity is included
+  quantity: number;
 };
 
 const ShopProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { addToCart } = useCart(); // Ensure addToCart is used
+  const { addToCart } = useCart();
 
+  // Fetch products from the API
   useEffect(() => {
-    fetchProducts()
-      .then((data) => {
-        console.log("Fetched Products:", data);
+    const getProducts = async () => {
+      try {
+        const data = await fetchProducts();
         setProducts(data);
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching products:", err);
-        setError("Failed to load products");
+      } catch (err) {
+        console.error(err); // Log the error
+        setError("Failed to load products.");
         setLoading(false);
-      });
+      }
+    };
+
+    getProducts();
   }, []);
 
-  if (loading) return <p className="text-center py-10">Loading products...</p>;
-  if (error) return <p className="text-center py-10 text-red-500">{error}</p>;
+  const handleAddToCart = (product: Product) => {
+    addToCart(product);
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div>
       <Header />
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
-          {products.length > 0 ? (
-            products.map((product) => (
-              <div
-                key={product.id} // Ensure id is correctly fetched
-                className="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 ease-out overflow-hidden"
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4">
+        {products.map((product) => (
+          <div
+            key={product.id} 
+            className="border p-4 rounded-lg shadow-md hover:shadow-lg"
+          >
+            <Image
+              src={product.imagePath}
+              alt={product.category}
+              width={300}
+              height={300}
+              className="object-cover w-full h-48 rounded-t-lg"
+            />
+            <h2 className="text-lg font-semibold mt-2">{product.category}</h2>
+            <p className="text-gray-500">{product.description}</p>
+            <div className="mt-2">
+              <span className="text-xl font-bold">${product.price}</span>
+              {product.discountPercentage && (
+                <span className="text-red-500 ml-2">
+                  {product.discountPercentage}% off
+                </span>
+              )}
+            </div>
+            <div className="flex justify-between items-center mt-3">
+              <span className="text-gray-700">Stock: {product.stockLevel}</span>
+              <button
+                onClick={() => handleAddToCart(product)} // Correct quantity update logic
+                className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
               >
-                <Image
-                  src={product.imagePath}
-                  alt={product.description || "Product Image"}
-                  width={300}
-                  height={300}
-                  className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="p-4">
-                  <h2 className="text-lg font-semibold text-gray-800">{product.category}</h2>
-                  <p className="text-gray-600">{product.description}</p>
-                  <p className="text-gray-900 font-bold">${product.price}</p>
-                  <button
-                    onClick={() => addToCart({ ...product, quantity: 1 })} // Ensure quantity is passed
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-center col-span-full text-gray-500"><strong>Check Your Internet</strong>
-            <br />
-            <i>Products Not Avalible</i></p>
-          )}
-        </div>
-      </main>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

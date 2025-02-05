@@ -3,9 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "./components/footer";
 // import Header from "./components/header";
-import AdComponent from "./components/adcomponet";
+import AdComponent from "@/app/components/adcomponet"; // Corrected the filename here
 import { CartProvider } from "./context/CartContext";
-
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,16 +26,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const discountProduct = {
     name: "Sample Product",
     discount: 20,
+    discountPercentage: 20,
+    category: "Sample Category",
   };
 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        
         <AdComponent discountProduct={discountProduct} />
-        <CartProvider >
-          
-        {children}
+        <CartProvider>
+          {children}
         </CartProvider>
         <Footer />
       </body>
